@@ -59,7 +59,6 @@ public class Borsa {
 			boolean rimosso=false;
 			for(int i=0;i<this.numeroAttrezzi;i++) {
 				if(this.attrezzi[i].getNome().equals(nomeAttrezzo)){
-					this.attrezzi[i] = null;
 					this.numeroAttrezzi--;
 					this.attrezzi = ordinaAttrezzi(this.attrezzi,this.numeroAttrezzi,i);
 					rimosso = true;

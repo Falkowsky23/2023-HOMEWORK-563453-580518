@@ -11,6 +11,10 @@ public class Giocatore {
 		this.borsa = new Borsa();
 		this.cfu = CFU_INIZIALI;
 	}
+	
+	public boolean hasCfu(){
+		return (this.cfu!=0);
+	}
 
 	public int getCfu() {
 		return cfu;
