@@ -10,6 +10,8 @@ import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.IOConsole;
 import it.uniroma3.diadia.IOSimulator;
 import it.uniroma3.diadia.Partita;
+import it.uniroma3.diadia.ambienti.Labirinto;
+import it.uniroma3.diadia.ambienti.LabirintoBuilder;
 import it.uniroma3.diadia.ambienti.Stanza;
 
 public class ComandoVaiTest {
@@ -21,11 +23,13 @@ public class ComandoVaiTest {
 	private String direzioneSbagliata;
 	private String direzione;
 	private IO io;
+	private Labirinto labirinto;
 
 	@Before
 	public void setUp() {
 		this.io = new IOConsole();
-		this.partita = new Partita(io);
+		this.labirinto = new Labirinto();
+		this.partita = new Partita(labirinto,io);
 		this.direzione = "nord";
 		this.direzioneSbagliata = "sud";
 		this.comandoVai = new ComandoVai(direzione);
@@ -58,15 +62,21 @@ public class ComandoVaiTest {
 	public void testPartitaAutonoma() {
 		String[] comandiDaEseguire = {"vai est","fine"};
 		IOSimulator io = new IOSimulator(comandiDaEseguire);
-		DiaDia diadia = new DiaDia(io);
+		Labirinto labirinto = new LabirintoBuilder()
+				.addStanzaIniziale("inizio")
+				.addStanza("fine")
+				.addAttrezzo("attrezzo", 2)
+				.addAdiacenza("inizio","fine","est")
+				.getLabirinto();
+		DiaDia diadia = new DiaDia(labirinto,io);
 		diadia.gioca();
 		assertTrue(io.hasMessaggio());
-		assertEquals(io.mostraMessaggio(), DiaDia.MESSAGGIO_BENVENUTO);
+		assertEquals(io.nextMessaggio(), DiaDia.MESSAGGIO_BENVENUTO);
 		assertTrue(io.hasMessaggio());
-		assertEquals(io.mostraMessaggio(), diadia.partita.getLabirinto().getStanzaCorrente().getDescrizione());
+		assertEquals(io.nextMessaggio(), diadia.partita.getLabirinto().getStanzaCorrente().getDescrizione());
 		assertTrue(io.hasMessaggio());
-		assertEquals(io.mostraMessaggio(), "Cfu: " + diadia.partita.getCfu());
+		assertEquals(io.nextMessaggio(), "Cfu: " + diadia.partita.getCfu());
 		assertTrue(io.hasMessaggio());
-		assertEquals(io.mostraMessaggio(), "Grazie di aver giocato!");
+		assertEquals(io.nextMessaggio(), "Grazie di aver giocato!");
 	}
 }

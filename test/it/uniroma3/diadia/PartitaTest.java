@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import it.uniroma3.diadia.ambienti.Labirinto;
 import it.uniroma3.diadia.ambienti.Stanza;
 
 public class PartitaTest {
@@ -17,10 +18,10 @@ public class PartitaTest {
 	@Before
 	public void setUp(){
 		this.io = new IOConsole();
-		this.terminata = new Partita(io);
-		this.vinta = new Partita(io);
-		this.persa = new Partita(io);
-		this.nonTerminata = new Partita(io);
+		this.terminata = new Partita(new Labirinto(),io);
+		this.vinta = new Partita(new Labirinto(),io);
+		this.persa = new Partita(new Labirinto(),io);
+		this.nonTerminata = new Partita(new Labirinto(),io);
 		this.terminata.setFinita();
 		Stanza stanza = vinta.getLabirinto().getStanzaVincente();
 		this.vinta.getLabirinto().setStanzaCorrente(stanza);

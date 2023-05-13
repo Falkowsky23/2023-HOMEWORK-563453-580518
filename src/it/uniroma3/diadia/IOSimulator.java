@@ -1,36 +1,40 @@
 package it.uniroma3.diadia;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class IOSimulator implements IO{
 
-	private String[] messaggi;
+	private List<String> messaggi;
 	private int messaggiStampati;
-	private String[] letture;
+	private List<String> letture;
 	private int lettureLette;
 	private int messaggiMostrati;
 
 	public IOSimulator(String[] letture){
 		this.messaggiStampati = 0;
-		this.messaggi = new String[100];
+		this.messaggi = new ArrayList<>();
 		this.lettureLette = 0;
 		this.messaggiMostrati = 0;
-		this.letture = letture;
+		this.letture = new ArrayList<>(Arrays.asList(letture));
 	}
 
 	@Override
 	public void mostraMessaggio(String messaggio){
-		this.messaggi[this.messaggiStampati] = messaggio;
+		this.messaggi.add(messaggio);
 		this.messaggiStampati++;
 	}
 
 	@Override
 	public String leggiRiga(){
-		String letta = this.letture[this.lettureLette];
+		String letta = this.letture.get(lettureLette);
 		this.lettureLette++;
 		return letta;
 	}
 	
-	public String mostraMessaggio() {
-        String next = this.messaggi[this.messaggiMostrati];
+	public String nextMessaggio() {
+        String next = this.messaggi.get(messaggiMostrati);
         this.messaggiMostrati++;
         return next;
     }

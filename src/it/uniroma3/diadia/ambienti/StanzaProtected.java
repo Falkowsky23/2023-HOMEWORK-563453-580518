@@ -1,14 +1,29 @@
 package it.uniroma3.diadia.ambienti;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
+/**
+ * Classe Stanza - una stanza in un gioco di ruolo.
+ * Una stanza e' un luogo fisico nel gioco.
+ * E' collegata ad altre stanze attraverso delle uscite.
+ * Ogni uscita e' associata ad una direzione.
+ * 
+ * @author docente di POO 
+ * @see Attrezzo
+ * @version base
+ */
+
 public class StanzaProtected {
-	
-	static final protected int NUMERO_MASSIMO_DIREZIONI = 4;
-	static final protected int NUMERO_MASSIMO_ATTREZZI = 10;
+
+	static final private int NUMERO_MASSIMO_DIREZIONI = 4;
+	static final public int NUMERO_MASSIMO_ATTREZZI = 10;
 
 	protected String nome;
-	protected Attrezzo[] attrezzi; // solo la prima parte dell'array è non nulla
+	protected List<Attrezzo> attrezzi; // solo la prima parte dell'array è non nulla
 	protected int numeroAttrezzi; // contatore di riempimento dell'array sopra per una rappresentazione compatta
 	protected Stanza[] stanzeAdiacenti;
 	protected int numeroStanzeAdiacenti;
@@ -24,7 +39,7 @@ public class StanzaProtected {
 		this.numeroAttrezzi = 0;
 		this.direzioni = new String[NUMERO_MASSIMO_DIREZIONI];
 		this.stanzeAdiacenti = new Stanza[NUMERO_MASSIMO_DIREZIONI];
-		this.attrezzi = new Attrezzo[NUMERO_MASSIMO_ATTREZZI];
+		this.attrezzi = new ArrayList<Attrezzo>(NUMERO_MASSIMO_ATTREZZI);
 	}
 
 	/**
@@ -77,13 +92,33 @@ public class StanzaProtected {
 	}
 
 	/**
+	 * Restituisce la collezione di attrezzi presenti nella stanza.
+	 * @return la collezione di attrezzi nella stanza.
+	 */
+	public List<Attrezzo> getAttrezzi() {
+		return this.attrezzi;
+	}
+
+	public void setAttrezzi(List<Attrezzo> attrezzi) {
+		this.attrezzi = attrezzi;
+	}
+
+	public int getNumeroAttrezzi() {
+		return numeroAttrezzi;
+	}
+
+	public void setNumeroAttrezzi(int numeroAttrezzi) {
+		this.numeroAttrezzi = numeroAttrezzi;
+	}
+
+	/**
 	 * Mette un attrezzo nella stanza.
 	 * @param attrezzo l'attrezzo da mettere nella stanza.
 	 * @return true se riesce ad aggiungere l'attrezzo, false atrimenti.
 	 */
 	public boolean addAttrezzo(Attrezzo attrezzo) {
 		if (this.numeroAttrezzi < NUMERO_MASSIMO_ATTREZZI) {
-			this.attrezzi[numeroAttrezzi] = attrezzo;
+			this.attrezzi.add(attrezzo);
 			this.numeroAttrezzi++;
 			return true;
 		}
@@ -105,24 +140,11 @@ public class StanzaProtected {
 			if (direzione!=null)
 				risultato.append(" " + direzione);
 		risultato.append("\nAttrezzi nella stanza: ");
-		for (int i=0;i<this.numeroAttrezzi;i++) {
-			risultato.append(this.attrezzi[i]+" ");
+		Iterator<Attrezzo> iteratore = this.attrezzi.iterator();
+		while(iteratore.hasNext()) {
+			risultato.append(iteratore.next()+" ");
 		}
 		return risultato.toString();
-	}
-
-	/**
-	 * Controlla se un attrezzo esiste nella stanza (uguaglianza sul nome).
-	 * @return true se l'attrezzo esiste nella stanza, false altrimenti.
-	 */
-	public boolean hasAttrezzo(String nomeAttrezzo) {
-		boolean trovato;
-		trovato = false;
-		for (int i=0;i<this.numeroAttrezzi;i++) {
-			if (this.attrezzi[i].getNome().equals(nomeAttrezzo))
-				trovato = true;
-		}
-		return trovato;
 	}
 
 	/**
@@ -132,13 +154,22 @@ public class StanzaProtected {
 	 * 		   null se l'attrezzo non e' presente.
 	 */
 	public Attrezzo getAttrezzo(String nomeAttrezzo) {
-		Attrezzo attrezzoCercato;
-		attrezzoCercato = null;
-		for (int i=0;i<this.numeroAttrezzi;i++) {
-			if (this.attrezzi[i].getNome().equals(nomeAttrezzo))
-				attrezzoCercato = this.attrezzi[i];
+		Attrezzo attrezzoCercato = null;
+		Iterator<Attrezzo> iteratore = this.attrezzi.iterator();
+		while(iteratore.hasNext()) {
+			Attrezzo a = iteratore.next();
+			if(a.getNome().equals(nomeAttrezzo))
+				attrezzoCercato = a;
 		}
 		return attrezzoCercato;	
+	}
+
+	/**
+	 * Controlla se un attrezzo esiste nella stanza (uguaglianza sul nome).
+	 * @return true se l'attrezzo esiste nella stanza, false altrimenti.
+	 */
+	public boolean hasAttrezzo(String nomeAttrezzo) {
+		return this.getAttrezzo(nomeAttrezzo)!=null;
 	}
 
 	/**
@@ -148,24 +179,25 @@ public class StanzaProtected {
 	 */
 	public boolean removeAttrezzo(String attrezzo) {
 		boolean rimosso=false;
-		for(int i=0;i<this.numeroAttrezzi;i++) {
-			if(this.attrezzi[i].getNome().equals(attrezzo)){
-				this.attrezzi[i] = null;
+		Iterator<Attrezzo> iteratore = this.attrezzi.iterator();
+		while(iteratore.hasNext()) {
+			Attrezzo a = iteratore.next();
+			if(a.getNome().equals(attrezzo)) {
 				this.numeroAttrezzi--;
-				this.attrezzi = ordinaAttrezzi(this.attrezzi,this.numeroAttrezzi,i);
+				iteratore.remove();
 				rimosso = true;
 			}
 		}
 		return rimosso;
 	}
 
-	static Attrezzo[] ordinaAttrezzi(Attrezzo[] attrezzi,int numeroAttrezzi,int i) {
-		for(int j=i;j<numeroAttrezzi;j++) {
-			attrezzi[j]=attrezzi[j+1];
-		}
-		attrezzi[numeroAttrezzi] = null;
-		return attrezzi;
-	}
+//	static Attrezzo[] ordinaAttrezzi(Attrezzo[] attrezzi,int numeroAttrezzi,int i) {
+//		for(int j=i;j<numeroAttrezzi;j++) {
+//			attrezzi[j]=attrezzi[j+1];
+//		}
+//		attrezzi[numeroAttrezzi] = null;
+//		return attrezzi;
+//	}
 
 	/**
 	 * Restituisce le direzioni disponibili in una stanza

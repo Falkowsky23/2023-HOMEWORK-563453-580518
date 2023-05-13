@@ -34,3 +34,4 @@ class StanzaMagica extends Stanza {
 		return attrezzo;
 	}
 }
+

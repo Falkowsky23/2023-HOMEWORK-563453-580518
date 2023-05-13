@@ -19,8 +19,8 @@ public class Partita {
 	private Giocatore giocatore;
 	private IO io;
 	
-	public Partita(IO io){
-		this.labirinto = new Labirinto();
+	public Partita(Labirinto labirinto,IO io){
+		this.labirinto = labirinto;
 		this.finita = false;
 		this.giocatore = new Giocatore();
 		this.io = io;
@@ -60,6 +60,10 @@ public class Partita {
 	
 	public Labirinto getLabirinto() {
 		return this.labirinto;
+	}
+
+	public void setLabirinto(Labirinto labirinto) {
+		this.labirinto = labirinto;
 	}
 
 	public Giocatore getGiocatore() {
