@@ -1,9 +1,10 @@
 package it.uniroma3.diadia.giocatore;
 
+import it.uniroma3.diadia.Configurazione;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class Giocatore {
-	static final private int CFU_INIZIALI = 20;
+	static final private int CFU_INIZIALI = Configurazione.getCFU();
 	private int cfu;
 	private Borsa borsa;
 	

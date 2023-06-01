@@ -19,7 +19,7 @@ public class StanzaBuiaTest {
 
 	@Test
 	public void testGetDescrizioneLuceNonPresente() {
-		assertEquals(StanzaBuia.DESCRIZIONE_STANZA_BUIA, this.stanzaBuia.getDescrizione());
+		assertEquals(StanzaBuia.DESCRIZIONE_STANZA_BUIA+ATTREZZO_LUCE_TEST, this.stanzaBuia.getDescrizione());
 	}
 
 	@Test

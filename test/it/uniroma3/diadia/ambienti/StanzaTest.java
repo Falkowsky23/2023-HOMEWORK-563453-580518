@@ -18,7 +18,7 @@ public class StanzaTest {
 		this.stanza = new Stanza("stanza");
 		this.attrezzo = new Attrezzo("spada",12);
 		this.stanza.addAttrezzo(attrezzo);
-		this.stanza.impostaStanzaAdiacente("sud", stanza);
+		this.stanza.impostaStanzaAdiacente(Direzione.SUD, stanza);
 	}
 
 	//INIZIO TEST: getAttrezzo()
@@ -76,17 +76,17 @@ public class StanzaTest {
 	//INIZIO TEST: getStanzaAdiacente()
 	@Test
 	public void testGetStanzaAdiacenteStanzaVuota() {
-		assertEquals(null, stanzaVuota.getStanzaAdiacente("nord"));
+		assertEquals(null, stanzaVuota.getStanzaAdiacente(Direzione.NORD));
 	}
 
 	@Test
 	public void testGetStanzaAdiacenteStanzaUnaAdiacenteSbagliata() {
-		assertEquals(null, stanza.getStanzaAdiacente("nord"));
+		assertEquals(null, stanza.getStanzaAdiacente(Direzione.NORD));
 	}
 
 	@Test
 	public void testGetStanzaAdiacenteStanzaUnaAdiacenteGiusta() {
-		assertEquals(stanza, stanza.getStanzaAdiacente("sud"));
+		assertEquals(stanza, stanza.getStanzaAdiacente(Direzione.SUD));
 	}
 	//FINE TEST
 }

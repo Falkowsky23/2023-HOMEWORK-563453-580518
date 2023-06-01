@@ -10,7 +10,7 @@ public class FabbricaDiComandiFisarmonica implements FabbricaDiComandi {
 		Scanner scannerDiParole = new Scanner(istruzione);
 		String nomeComando = null;
 		String parametro = null;
-		Comando comando = null;
+		AbstractComando comando = null;
 		if (scannerDiParole.hasNext())
 			nomeComando = scannerDiParole.next(); // prima parola: nome del comando
 		if (scannerDiParole.hasNext())
@@ -18,11 +18,11 @@ public class FabbricaDiComandiFisarmonica implements FabbricaDiComandi {
 		if (nomeComando == null) 
 			comando = new ComandoNonValido();
 		else if (nomeComando.equals("vai"))
-			comando = new ComandoVai(parametro);
+			comando = new ComandoVai();
 		else if (nomeComando.equals("prendi"))
-			comando = new ComandoPrendi(parametro);
+			comando = new ComandoPrendi(); 
 		else if (nomeComando.equals("posa"))
-			comando = new ComandoPosa(parametro);
+			comando = new ComandoPosa();
 		else if (nomeComando.equals("aiuto"))
 			comando = new ComandoAiuto();
 		else if (nomeComando.equals("fine"))

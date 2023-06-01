@@ -1,9 +1,13 @@
 package it.uniroma3.diadia;
 
+import java.io.StringReader;
+
+import it.uniroma3.diadia.ambienti.CaricatoreLabirinto;
+import it.uniroma3.diadia.ambienti.FormatoFileNonValidoException;
 import it.uniroma3.diadia.ambienti.Labirinto;
 import it.uniroma3.diadia.comandi.Comando;
 import it.uniroma3.diadia.comandi.FabbricaDiComandi;
-import it.uniroma3.diadia.comandi.FabbricaDiComandiFisarmonica;
+import it.uniroma3.diadia.comandi.FabbricaDiComandiRiflessiva;
 
 /**
  * Classe principale di diadia, un semplice gioco di ruolo ambientato al dia.
@@ -52,7 +56,7 @@ public class DiaDia {
 	 * @return true se l'istruzione e' eseguita e il gioco continua, false altrimenti
 	 */
 	private boolean processaIstruzione(String istruzione) {
-		FabbricaDiComandi fabbrica = new FabbricaDiComandiFisarmonica();
+		FabbricaDiComandi fabbrica = new FabbricaDiComandiRiflessiva();
 
 		Comando comando = fabbrica.costruisci(istruzione);
 		comando.esegui(this.partita);
@@ -63,9 +67,23 @@ public class DiaDia {
 		return false;
 	}   
 
-	public static void main(String[] argc) {
+	public static void main(String[] argc) throws FormatoFileNonValidoException {
+		String prova = "Stanze: biblioteca, N10, N11 \n"+
+				"Stanze Bloccate: N18 nord pinza \n"+
+				"Stanze Buie: AulaCampus lanterna \n"+
+				"Stanze Magiche: Atrio \n"+
+				"Inizio: N10 \n"+
+				"Vincente: N11 \n"+
+				"Attrezzi: martello 10 biblioteca, pinza 2 N10, osso 3 biblioteca, lanterna 4 N18 \n"+
+				"Uscite: biblioteca nord N10, biblioteca sud N11, biblioteca est N18, N18 nord AulaCampus, N18 sud Atrio \n"+
+				"Cani: Ugo, WOF WOF, osso, dente, 1, N10 \n"+
+				"Maghi: Pippo, Faccio magie bellissime!, bacchetta, 2, biblioteca \n"+
+				"Streghe: Marcella, Sono molto permalosa!, N18 \n";
+		
 		IO io = new IOConsole();
-		Labirinto labirinto = new Labirinto();
+		CaricatoreLabirinto caricatore = new CaricatoreLabirinto(new StringReader(prova));
+		caricatore.carica();
+		Labirinto labirinto = caricatore.getLabirinto();
 		DiaDia gioco = new DiaDia(labirinto,io);
 		gioco.gioca();
 	}

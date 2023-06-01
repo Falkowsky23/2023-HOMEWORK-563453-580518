@@ -6,22 +6,26 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class LabirintoTest {
-
+	private static final String VINCENTE = "vincente";
+	private static final String INIZIALE = "iniziale";
 	private Labirinto labirinto;
-	private Stanza stanza;
-
-
+	
 	@Before
 	public void setUp() {
-		this.labirinto = new Labirinto();
-		this.stanza = new Stanza("N20");
-		this.labirinto.setStanzaCorrente(stanza);
+		this.labirinto = Labirinto.newBuilder()
+				.addStanzaIniziale(INIZIALE)
+				.addStanzaVincente(VINCENTE)
+				.getLabirinto();
 	}
 
-	//INIZIO TEST: getStanzaCorrente()
 	@Test
-	public void testGetStanzaCorrente() {
-		assertNotNull(this.labirinto.getStanzaCorrente());
+	public void testGetStanzaIniziale() {
+		assertEquals(INIZIALE, this.labirinto.getStanzaCorrente().getNome());
 	}
-	//FINE TEST
+
+	@Test
+	public void testGetStanzaVincente() {
+		assertEquals(VINCENTE, this.labirinto.getStanzaVincente().getNome());
+	}
+
 }

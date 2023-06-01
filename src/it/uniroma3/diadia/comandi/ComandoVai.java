@@ -2,58 +2,54 @@ package it.uniroma3.diadia.comandi;
 
 import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
+import it.uniroma3.diadia.ambienti.Direzione;
 import it.uniroma3.diadia.ambienti.Stanza;
 
-public class ComandoVai implements Comando {
+public class ComandoVai extends AbstractComando {
 
 	static final private String NOME = "vai";
-	private String direzione;
 
-	public ComandoVai(String direzione) {
-		this.direzione = direzione;
+	public ComandoVai(){
+		super.setNome(NOME);
 	}
 
 	@Override
 	public void esegui(Partita partita) {
 
 		IO io = partita.getIO();
+		String direzione = super.getParametro();
 
-		if(this.direzione==null) {
+		if(direzione==null) {
 			io.mostraMessaggio("Devi scegliere una direzione dove andare!");
 			return;
-		} else {
-			Stanza prossimaStanza = null;
-			Stanza stanzaCorrente = partita.getLabirinto().getStanzaCorrente();
-			prossimaStanza = stanzaCorrente.getStanzaAdiacente(direzione);
-			if (prossimaStanza == null) {
+		} 
+		Stanza prossimaStanza = null;
+		Stanza stanzaCorrente = partita.getLabirinto().getStanzaCorrente();
+		Direzione dir = null;
+		try{
+			dir = Direzione.valueOf(direzione.toUpperCase());
+		}
+		finally {
+			if(dir == null) {
 				io.mostraMessaggio("Direzione inesistente");
+				return;
+			}
+			prossimaStanza = partita.getLabirinto().getStanzaCorrente().getStanzaAdiacente(dir);
+			if(prossimaStanza == null) {
+				io.mostraMessaggio("Direzione non disponibile");
 				return;
 			}
 			if(prossimaStanza == stanzaCorrente){
 				io.mostraMessaggio("la direzione è bloccata!");
+				return;
 			}
-			else {
-				partita.getLabirinto().setStanzaCorrente(prossimaStanza);
-				int cfu = partita.getCfu();
-				partita.setCfu(--cfu);
-			}
+			partita.getLabirinto().setStanzaCorrente(prossimaStanza);
+			int cfu = partita.getCfu();
+			partita.setCfu(--cfu);
+
+
+			io.mostraMessaggio(partita.getLabirinto().getStanzaCorrente().getDescrizione());
+			io.mostraMessaggio("Cfu: " + partita.getCfu());
 		}
-		io.mostraMessaggio(partita.getLabirinto().getStanzaCorrente().getDescrizione());
-		io.mostraMessaggio("Cfu: " + partita.getCfu());
-	}
-
-	@Override
-	public void setParametro(String parametro) {
-		this.direzione = parametro;
-	}
-
-	@Override
-	public String getNome() {
-		return NOME;
-	}
-
-	@Override
-	public String getParametro(){
-		return this.direzione;
 	}
 }

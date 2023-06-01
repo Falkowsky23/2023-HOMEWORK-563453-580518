@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import it.uniroma3.diadia.Configurazione;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
+import it.uniroma3.diadia.personaggi.AbstractPersonaggio;
 
 /**
  * Classe Stanza - una stanza in un gioco di ruolo.
@@ -21,12 +23,12 @@ import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class Stanza {
 
-	// static final private int NUMERO_MASSIMO_DIREZIONI = 4;
-	static final public int NUMERO_MASSIMO_ATTREZZI = 10;
+	static final public int NUMERO_MASSIMO_ATTREZZI = Configurazione.getAttrezziStanzaMax();
 
 	private String nome;
+	private AbstractPersonaggio personaggio;
 	private Map<String,Attrezzo> attrezzi;
-	private Map<String,Stanza> stanzeAdiacenti;
+	private Map<Direzione,Stanza> stanzeAdiacenti;
 
 	/**
 	 * Crea una stanza. Non ci sono stanze adiacenti, non ci sono attrezzi.
@@ -36,6 +38,7 @@ public class Stanza {
 		this.nome = nome;
 		this.stanzeAdiacenti = new HashMap<>();
 		this.attrezzi = new HashMap<>();
+		this.personaggio = null;
 	}
 
 	/**
@@ -44,7 +47,7 @@ public class Stanza {
 	 * @param direzione direzione in cui sara' posta la stanza adiacente.
 	 * @param stanza stanza adiacente nella direzione indicata dal primo parametro.
 	 */
-	public void impostaStanzaAdiacente(String direzione, Stanza stanza) {
+	public void impostaStanzaAdiacente(Direzione direzione, Stanza stanza) {
 		this.stanzeAdiacenti.put(direzione, stanza);
 	}
 
@@ -52,7 +55,7 @@ public class Stanza {
 	 * Restituisce la stanza adiacente nella direzione specificata
 	 * @param direzione
 	 */
-	public Stanza getStanzaAdiacente(String direzione) {
+	public Stanza getStanzaAdiacente(Direzione direzione) {
 		return this.stanzeAdiacenti.get(direzione);
 	}
 
@@ -78,6 +81,10 @@ public class Stanza {
 	 */
 	public Collection<Attrezzo> getAttrezzi() {
 		return this.attrezzi.values();
+	}
+	
+	public int getNumeroAttrezzi() {
+		return this.attrezzi.size();
 	}
 
 	/**
@@ -105,8 +112,14 @@ public class Stanza {
 		risultato.append(this.nome);
 		risultato.append("\nUscite: ");
 		risultato.append(this.stanzeAdiacenti.keySet().toString());
-		risultato.append("\nAttrezzi nella stanza: ");
-		risultato.append(this.attrezzi.values().toString());
+		if(this.getNumeroAttrezzi() != 0) {
+			risultato.append("\nAttrezzi nella stanza: ");
+			risultato.append(this.attrezzi.values().toString());
+		}
+		if(this.getPersonaggio() != null) {
+			risultato.append("\nPersonaggi nella stanza: ");
+			risultato.append(this.getPersonaggio().getNome());
+		}
 		return risultato.toString();
 	}
 
@@ -146,8 +159,16 @@ public class Stanza {
 	 * @return direzioni disponibili, null se assenti
 	 * 
 	 */
-	public Set<String> getDirezioni() {
+	public Set<Direzione> getDirezioni() {
 		if(this.stanzeAdiacenti.size()==0) return null;
 		return this.stanzeAdiacenti.keySet();
+	}
+
+	public AbstractPersonaggio getPersonaggio() {
+		return personaggio;
+	}
+
+	public void setPersonaggio(AbstractPersonaggio personaggio) {
+		this.personaggio = personaggio;
 	}
 }

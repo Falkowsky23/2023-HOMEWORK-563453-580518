@@ -10,10 +10,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import it.uniroma3.diadia.Configurazione;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class Borsa {
-	public final static int DEFAULT_PESO_MAX_BORSA = 10;
+	public final static int DEFAULT_PESO_MAX_BORSA = Configurazione.getPesoMax();
 	private Map<String,Attrezzo> attrezzi;
 	private int pesoMax;
 	private int peso;
